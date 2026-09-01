@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-ink text-bone font-serif antialiased;
+    background-image: theme("backgroundImage.noise");
+  }
+
+  ::selection {
+    @apply bg-blood text-bone;
+  }
+
+  /* Feedback tátil leve ao clicar em qualquer botão do app */
+  button:not(:disabled) {
+    @apply transition-transform duration-150 active:scale-95;
+  }
+
+  /* Estado de foco visível e consistente em toda a aplicação (acessibilidade) */
+  button:focus-visible,
+  select:focus-visible,
+  a:focus-visible {
+    @apply outline-none ring-2 ring-amber ring-offset-2 ring-offset-ink;
+  }
+}
+
+@layer components {
+  /* Cartão estilo "documento de arquivo" reutilizado em toda a aplicação.
+     Manchas sutis + vinheta escura nas bordas simulam papel envelhecido,
+     e a dobra no canto (::after) imita uma folha de dossiê arquivada. */
+  .dossie-card {
+    @apply relative rounded-md border border-parchment/10 bg-charcoal2 shadow-file transition-shadow duration-200;
+    background-image: radial-gradient(circle at 15% 10%, rgba(216, 203, 174, 0.04), transparent 55%),
+      radial-gradient(circle at 85% 90%, rgba(181, 80, 47, 0.05), transparent 50%),
+      radial-gradient(circle at 90% 15%, rgba(90, 132, 130, 0.04), transparent 45%);
+    box-shadow: theme("boxShadow.file"), inset 0 0 34px rgba(0, 0, 0, 0.35);
+  }
+
+  .dossie-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 14px 14px 0;
+    border-color: transparent theme("colors.ink") transparent transparent;
+    opacity: 0.45;
+  }
+
+  .dossie-label {
+    @apply font-stamp text-xs font-medium tracking-wide text-parchment2/70;
+  }
+
+  .dossie-input {
+    @apply w-full rounded-sm border border-parchment/15 bg-charcoal px-3 py-2 text-bone placeholder:text-parchment2/35 transition-colors duration-150 focus:border-blood focus:outline-none focus:ring-1 focus:ring-blood;
+  }
+
+  /* Campo "fantasma": some visualmente até receber foco/hover, usado para
+     edição inline nos cartões de investigação — tudo permanece editável
+     a qualquer momento, sem precisar excluir e recriar o registro. */
+  .dossie-input-ghost {
+    @apply w-full rounded-sm border border-transparent bg-transparent px-1.5 py-1 text-bone placeholder:text-parchment2/30 transition-colors duration-150 hover:border-parchment/15 hover:bg-charcoal focus:border-blood focus:bg-charcoal focus:outline-none;
+  }
+
+  /* Carimbo de tinta, estilo arquivo confidencial. Uso funcional:
+     reforça um status (ex.: pista revelada), não é só decoração. */
+  .stamp {
+    @apply pointer-events-none inline-block select-none whitespace-nowrap rounded-[2px] border-[3px] px-2.5 py-1 font-stamp text-[10px] font-semibold uppercase tracking-[0.2em];
+    text-shadow: 0 0 1px currentColor;
+  }
+}
