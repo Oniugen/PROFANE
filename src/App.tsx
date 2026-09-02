@@ -9,7 +9,9 @@ import {
   salvarFicha,
   salvarInvestigacao,
 } from "./utils/storage";
+import { initAudioOnInteraction } from "./utils/sounds";
 import Sidebar from "./components/Sidebar";
+import SoundToggle from "./components/SoundToggle";
 import Home from "./pages/Home";
 import CharacterPage from "./pages/Character";
 import Rolls from "./pages/Rolls";
@@ -42,6 +44,12 @@ function App() {
     salvarInvestigacao(board);
   }, [board]);
 
+  // Inicia o som ambiente assim que o usuário interagir pela primeira vez
+  // com a página (contorna o bloqueio de autoplay dos navegadores).
+  useEffect(() => {
+    initAudioOnInteraction();
+  }, []);
+
   function handleNovaFicha() {
     setCharacter(criarFichaVazia());
     setPage("character");
@@ -55,6 +63,7 @@ function App() {
   return (
     <div className="flex min-h-screen bg-ink text-bone font-serif">
       <Sidebar page={page} onNavigate={setPage} />
+      <SoundToggle />
 
       <main className="flex-1 overflow-y-auto p-4 pb-20 md:p-8 md:pb-8">
         <header className="mb-6 flex items-center gap-2 md:hidden">

@@ -3,6 +3,7 @@ import { Download, FileText, Loader2, Trash2, Upload } from "lucide-react";
 import type { Character } from "../types/character";
 import { exportarFicha, importarFicha, limparTodosDados } from "../utils/storage";
 import { exportarFichaPDF, importarFichaPDF } from "../utils/pdf";
+import { atualizarConfigSom, obterConfigSom } from "../utils/sounds";
 
 interface SettingsProps {
   character: Character | null;
@@ -13,6 +14,7 @@ interface SettingsProps {
 export default function Settings({ character, onImport, onCleared }: SettingsProps) {
   const [importingPdf, setImportingPdf] = useState(false);
   const [exportingPdf, setExportingPdf] = useState(false);
+  const [audio, setAudio] = useState(() => obterConfigSom());
 
   async function handleImportFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -62,8 +64,73 @@ export default function Settings({ character, onImport, onCleared }: SettingsPro
     }
   }
 
+  function updateAudio(patch: Partial<typeof audio>) {
+    const updated = atualizarConfigSom(patch);
+    setAudio(updated);
+  }
+
   return (
     <div className="space-y-4">
+      <div className="dossie-card space-y-4 p-6">
+        <p className="dossie-label mb-1">Áudio</p>
+
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm text-parchment2/90">Som ambiente</p>
+            <p className="text-xs text-parchment2/45">Trilha em loop tocando pelo app</p>
+          </div>
+          <button
+            onClick={() => updateAudio({ ambientEnabled: !audio.ambientEnabled })}
+            className={`h-6 w-11 rounded-full transition-colors ${
+              audio.ambientEnabled ? "bg-blood" : "bg-steel"
+            }`}
+          >
+            <span
+              className={`block h-5 w-5 translate-x-0.5 rounded-full bg-bone transition-transform ${
+                audio.ambientEnabled ? "translate-x-5" : ""
+              }`}
+            />
+          </button>
+        </div>
+        <input
+          type="range"
+          min={0}
+          max={100}
+          value={Math.round(audio.ambientVolume * 100)}
+          onChange={(e) => updateAudio({ ambientVolume: Number(e.target.value) / 100 })}
+          disabled={!audio.ambientEnabled}
+          className="w-full accent-blood disabled:opacity-40"
+        />
+
+        <div className="flex items-center justify-between border-t border-parchment/10 pt-3">
+          <div>
+            <p className="text-sm text-parchment2/90">Efeitos sonoros</p>
+            <p className="text-xs text-parchment2/45">Sons de rolagem de dados</p>
+          </div>
+          <button
+            onClick={() => updateAudio({ effectsEnabled: !audio.effectsEnabled })}
+            className={`h-6 w-11 rounded-full transition-colors ${
+              audio.effectsEnabled ? "bg-blood" : "bg-steel"
+            }`}
+          >
+            <span
+              className={`block h-5 w-5 translate-x-0.5 rounded-full bg-bone transition-transform ${
+                audio.effectsEnabled ? "translate-x-5" : ""
+              }`}
+            />
+          </button>
+        </div>
+        <input
+          type="range"
+          min={0}
+          max={100}
+          value={Math.round(audio.effectsVolume * 100)}
+          onChange={(e) => updateAudio({ effectsVolume: Number(e.target.value) / 100 })}
+          disabled={!audio.effectsEnabled}
+          className="w-full accent-blood disabled:opacity-40"
+        />
+      </div>
+
       <div className="dossie-card space-y-3 p-6">
         <p className="dossie-label mb-1">Ficha em PDF</p>
         <button

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Dices } from "lucide-react";
-import type { AttributeKey, Character, Roll } from "../types/character";
+import type { AttributeKey, Character, Roll, SkillName } from "../types/character";
 import { ATTRIBUTE_LABELS } from "../types/character";
 import { rollTest } from "../utils/dice";
 import RollResult from "./RollResult";
@@ -80,7 +80,11 @@ export default function RollPanel({ character, onRoll }: RollPanelProps) {
 
           <div>
             <label className="dossie-label mb-1 block">Perícia</label>
-            <select className="dossie-input" value={skillName} onChange={(e) => setSkillName(e.target.value as AttributeKey)}>
+            <select
+              className="dossie-input"
+              value={skillName}
+              onChange={(e) => setSkillName(e.target.value as SkillName)}
+            >
               {character.skills.map((s) => (
                 <option key={s.name} value={s.name}>
                   {s.name} (d{s.dice})
