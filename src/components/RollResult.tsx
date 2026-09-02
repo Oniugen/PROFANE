@@ -1,12 +1,24 @@
+import { useEffect } from "react";
 import type { Roll } from "../types/character";
 import { ATTRIBUTE_LABELS } from "../types/character";
 import Stamp from "./Stamp";
+import { playDiceCritical, playDiceFail } from "../utils/sounds";
 
 interface RollResultProps {
   roll: Roll;
 }
 
 export default function RollResult({ roll }: RollResultProps) {
+  useEffect(() => {
+    if (roll.isCriticalSuccess) {
+      playDiceCritical();
+    } else if (roll.isCriticalFailure) {
+      playDiceFail();
+    } else if (roll.difficulty !== undefined && !roll.success) {
+      playDiceFail();
+    }
+  }, [roll.id]);
+
   return (
     <div key={roll.id} className="dossie-card animate-fade-up p-4 md:p-6">
       <p className="dossie-label mb-3">Resultado</p>

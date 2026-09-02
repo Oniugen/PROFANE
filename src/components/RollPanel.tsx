@@ -80,7 +80,7 @@ export default function RollPanel({ character, onRoll }: RollPanelProps) {
 
           <div>
             <label className="dossie-label mb-1 block">Perícia</label>
-            <select className="dossie-input" value={skillName} onChange={(e) => setSkillName(e.target.value)}>
+            <select className="dossie-input" value={skillName} onChange={(e) => setSkillName(e.target.value as AttributeKey)}>
               {character.skills.map((s) => (
                 <option key={s.name} value={s.name}>
                   {s.name} (d{s.dice})

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Dices } from "lucide-react";
 import { SKILL_DICE } from "../types/character";
 import type { DiceSides, Skill } from "../types/character";
+import { playDiceRoll } from "../utils/sounds";
 
 interface SkillItemProps {
   skill: Skill;
@@ -14,6 +15,7 @@ export default function SkillItem({ skill, onChange, onRoll }: SkillItemProps) {
 
   function handleRollClick() {
     if (!onRoll) return;
+    playDiceRoll();
     setRolling(true);
     onRoll();
     window.setTimeout(() => setRolling(false), 500);
